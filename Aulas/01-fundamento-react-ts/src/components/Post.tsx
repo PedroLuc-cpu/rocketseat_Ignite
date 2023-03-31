@@ -4,9 +4,27 @@ import { ptBR } from "date-fns/locale";
 import post from "./Post.module.css";
 import Comment from "./Comment";
 import Avatar from "./Avatar";
-import { useState } from "react";
+import { ChangeEvent, FormEvent, InvalidEvent, useState } from "react";
 
-export default function Post({ author, publicheAt, content }) {
+interface Author{
+  name: string;
+  avatarUrl: string;
+  role:string
+  
+}
+
+interface Content{
+    type:string
+    content: string
+}
+
+export interface PostProps{
+  author: Author;
+  publicheAt: Date;
+  content: Content[]
+}
+
+export default function Post({ author, publicheAt, content }:PostProps) {
 
   // Array new comments
   const [comments, setComments] = useState(["Meu Primeiro comentario"]);
@@ -24,7 +42,7 @@ export default function Post({ author, publicheAt, content }) {
 
 
 // event handlers -->
-  function handleCreateNewComment() {
+  function handleCreateNewComment(event: FormEvent) {
     //  event.preventDefault() evento para não redirect "Single-page application"
     event.preventDefault();
 
@@ -34,19 +52,19 @@ export default function Post({ author, publicheAt, content }) {
     setnewCommentsText("")
   }
 
-  function handleNewCommentChange(){
+  function handleNewCommentChange(event: ChangeEvent<HTMLTextAreaElement>) {
     event.target.setCustomValidity("");
    setnewCommentsText(event.target.value)
   }
 
   // function de invalidação
-  function handleNewCommentInvalid(){
+  function handleNewCommentInvalid(event:InvalidEvent<HTMLTextAreaElement>){
     console.log(event.target.setCustomValidity("Escreva algo"));
   }
 
 
-  // comunicação do componente comentario
-    function deleteComment(commentToDelete){
+  // comunicação do componente comentariof
+    function deleteComment(commentToDelete:string){
       const commentsWithoutDeletedOne = comments.filter(comment =>{
         return comment !== commentToDelete;
       })
